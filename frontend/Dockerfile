@@ -1,13 +1,14 @@
 FROM node:14.16.0-alpine3.13
 
-RUN addgroup app && adduser -S -G app app
-USER app
 
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+RUN npm run build
+RUN npm install pm2 -g 
+RUN npm install serve -g
 
 EXPOSE 3000 
 
-CMD ["npm", "start"]
+CMD ["pm2", "serve", "build", "3000"]
